@@ -6,7 +6,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
 ```html
 <export-button
     client="[[esClient]]"
-    data="[[data]]"
+    data="[[exportData]]"
     download-image-url="[[downloadImageUrl]]"
     filter-list="[[filterList]]"
     index-name="[[elasticIndex]]"
