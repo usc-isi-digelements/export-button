@@ -614,7 +614,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         // Use observers rather than a json-combine element because we must observe changes on data.* rather than data itself.
         '_computeDataForCsv(data.length, transformCsvFunction)',
         '_computeDataForPdf(data.*, transformPdfFunction)',
-        '_computeDataForCsv(data.length, transformCsvFunction)',
+        '_computeDataForCsv(data.length, transformCsvFunction, searchFields)',
         '_computeDataForPdf(data.*, transformPdfFunction)',
         '_handleBulkError(_bulkError)',
         '_updateBulkDataObject(searchParameters.*, searchFields, transformSearchInputFunction)',
@@ -626,7 +626,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _computeDataForCsv: function() {
-        this._dataForCsv = this.transformCsvFunction(this.data);
+        this._dataForCsv = this.transformCsvFunction(this.data, this.searchFields);
       },
 
       /**
