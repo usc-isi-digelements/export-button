@@ -226,6 +226,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       properties-ready="[[_bulkSearchReady]]"
       source-exclude="[[sourceExclude]]"
       source-include="[[sourceInclude]]"
+      transform-config="[[searchFields]]"
       transform-function="[[transformSearchResultsFunction]]"
       error="{{_bulkError}}"
       loading="{{_bulkSearchLoading}}"
