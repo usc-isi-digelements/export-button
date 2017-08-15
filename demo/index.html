@@ -24,28 +24,36 @@ limitations under the License.
   <template is="dom-bind" id="demo">
     <export-button
       data="[[exportData]]"
-      transform-pdf-function="[[createExportDataForPdf]]">
+      search-fields="[[searchFields]]"
+      transform-pdf-function="[[createExportDataForPdf]]"
+      transform-csv-function="[[createExportDataForCsv]]">
     </export-button>
     
-    <span> Note: Export to Csv does not work without an user configured ES Index</span>
+    <span> Note: Export to Csv will not download without configured server routes</span>
   </template>
 
    <script>
     (function(document) {
       var demo = document.querySelector('#demo');
-      demo.exportData = [{
-        images: [],
-        paragraphs: [{
-          label: "Location: ",
-          value: "Mountain View, CA",
-        }, {
-          label: "Description: ",
-          value: "A quick brown fox jumped over the fence."
-        }]
-      }];
+      demo.exportData = [{id: 'sample'}];
   
       demo.createExportDataForPdf = function(object) {
-        return object;
+        return [{
+          images: [],
+          paragraphs: [{
+            label: "Location: ",
+            value: "Mountain View, CA",
+          }, {
+            label: "Description: ",
+            value: "A quick brown fox jumped over the fence."
+          }]
+        }];
+      }
+      demo.createExportDataForCsv = function(object) {
+        return [
+          ['header1', 'header2','header3'],
+          ['data1', 'data2', 'data3']
+        ];
       }
     })(document);
   </script>
