@@ -59,9 +59,8 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         display: block;
       }
 
-      styled-dialog ::content .fill .inside {
-        min-height: 500px;
-        min-width: 700px;
+      loading-spinner ::content > div {
+        margin: 5px;
       }
 
       .link {
@@ -105,7 +104,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
     <styled-dialog id="dialog" header="Export" fill>
       <div class="layout horizontal">
         <div class="styled-dialog-bold styled-dialog-right-space">Standard Export</div>
-        <div class="styled-dialog-text styled-dialog-right-space">Export the [[data.length]] Ads Currently Shown</div>
+        <div class="styled-dialog-bold styled-dialog-right-space">(Export the [[data.length]] Ads Currently Shown)</div>
       </div>
 
       <div class="styled-dialog-text">Please note that it may take a minute or longer to export hundreds of results to PDF.</div>
@@ -127,6 +126,14 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
           text="Export to PDF"
           click-listener="[[_createExportDataForPdfListener()]]">
         </button-action>
+
+        <template is="dom-if" if="[[_standardExportLoading]]">
+          <loading-spinner show="[[_standardExportLoading]]" type="Export File"></loading-spinner>
+        </template>
+
+        <template is="dom-if" if="[[_standardExportError]]">
+          <div class="styled-dialog-text">Error Exporting CSV File</div>
+        </template>
       </div>
 
       <div class="styled-dialog-divider"></div>
@@ -134,7 +141,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       <template is="dom-if" if="[[_isNotUndefined(searchParameters)]]">
         <div class="layout horizontal">
           <div class="styled-dialog-bold styled-dialog-right-space">Bulk Export</div>
-          <div class="styled-dialog-text styled-dialog-right-space">Export the Top Ads Matching Each Search Term</div>
+          <div class="styled-dialog-bold styled-dialog-right-space">(Export the Top Ads Matching Each Search Term)</div>
         </div>
 
         <div class="styled-dialog-text">If your exported file doesn't download automatically, please check that your internet browser allows popups from this page.</div>
@@ -157,6 +164,14 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
             text="Export to CSV"
             click-listener="[[_createBulkExportListener()]]">
           </button-action>
+
+          <template is="dom-if" if="[[_bulkSearchLoading]]">
+            <loading-spinner show="[[_bulkSearchLoading]]" type="Ad Data [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
+          </template>
+
+          <template is="dom-if" if="[[_bulkExportLoading]]">
+            <loading-spinner show="[[_bulkExportLoading]]" type="Export File [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
+          </template>
         </div>
 
         <template is="dom-if" if="[[_isBulkDataLoadingOrDone(_bulkSearchReady, _bulkData.array, _bulkData.index)]]">
@@ -174,22 +189,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
             </template>
           </template>
         </template>
-
-        <template is="dom-if" if="[[_bulkSearchLoading]]">
-          <loading-spinner show="[[_bulkSearchLoading]]" type="Ad Data:  [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
-        </template>
-
-        <template is="dom-if" if="[[_bulkExportLoading]]">
-          <loading-spinner show="[[_bulkExportLoading]]" type="Export File:  [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
-        </template>
-      </template>
-
-      <template is="dom-if" if="[[_standardExportError]]">
-        <div>Error Exporting CSV File</div>
-      </template>
-
-      <template is="dom-if" if="[[_standardExportLoading]]">
-        <loading-spinner show="[[_standardExportLoading]]" type="Export File"></loading-spinner>
       </template>
     </styled-dialog>
 

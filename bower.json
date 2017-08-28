@@ -1,7 +1,7 @@
 {
   "name": "export-button",
   "description": "A Polymer Element that generates pdf or csv files from queries to ElasticSearch.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "authors": ["Next Century Corporation"],
   "license": "Apache-2.0",
   "keywords": [
@@ -24,7 +24,7 @@
     "loading-spinner": "DigElements/loading-spinner#~1.0.1",
     "paper-elements": "PolymerElements/paper-elements#^1.0.7",
     "pdfmake": "^0.1.25",
-    "styled-dialog": "DigElements/styled-dialog#1.0.4"
+    "styled-dialog": "DigElements/styled-dialog#1.0.7"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.1.7",
