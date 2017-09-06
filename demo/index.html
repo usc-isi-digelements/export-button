@@ -16,45 +16,48 @@ limitations under the License.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <script src="../../webcomponentsjs/webcomponents-loader.js"></script>
   <link rel="import" href="../export-button.html">
 </head>
 
 <body unresolved>
-  <template is="dom-bind" id="demo">
-    <export-button
-      data="[[exportData]]"
-      search-fields="[[searchFields]]"
-      transform-pdf-function="[[createExportDataForPdf]]"
-      transform-csv-function="[[createExportDataForCsv]]">
-    </export-button>
-    
-    <span> Note: Export to Csv will not download without configured server routes</span>
-  </template>
+  <dom-bind id="demo">
+    <template is="dom-bind">
+      <script>
+        (function(document) {
+          var demo = document.querySelector('#demo');
+          demo.exportData = [{id: 'sample'}];
+      
+          demo.createExportDataForPdf = function(object) {
+            return [{
+              images: [],
+              paragraphs: [{
+                label: "Location: ",
+                value: "Mountain View, CA",
+              }, {
+                label: "Description: ",
+                value: "A quick brown fox jumped over the fence."
+              }]
+            }];
+          }
+          demo.createExportDataForCsv = function(object) {
+            return [
+              ['header1', 'header2','header3'],
+              ['data1', 'data2', 'data3']
+            ];
+          }
+        })(document);
+      </script>
 
-   <script>
-    (function(document) {
-      var demo = document.querySelector('#demo');
-      demo.exportData = [{id: 'sample'}];
-  
-      demo.createExportDataForPdf = function(object) {
-        return [{
-          images: [],
-          paragraphs: [{
-            label: "Location: ",
-            value: "Mountain View, CA",
-          }, {
-            label: "Description: ",
-            value: "A quick brown fox jumped over the fence."
-          }]
-        }];
-      }
-      demo.createExportDataForCsv = function(object) {
-        return [
-          ['header1', 'header2','header3'],
-          ['data1', 'data2', 'data3']
-        ];
-      }
-    })(document);
-  </script>
+      <export-button
+        data="[[exportData]]"
+        search-fields='[]'
+        search-parameters='{}'
+        transform-pdf-function="[[createExportDataForPdf]]"
+        transform-csv-function="[[createExportDataForCsv]]">
+      </export-button>
+      
+      <span> Note: Export to Csv will not download without configured server routes</span>
+    </template>
+  </dom-bind>
 </body>

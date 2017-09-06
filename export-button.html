@@ -14,22 +14,26 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/build-and-run-query/build-and-run-query.html">
-<link rel="import" href="../../bower_components/button-action/button-action.html">
-<link rel="import" href="../../bower_components/json-combine/json-combine.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../bower_components/iron-icon/iron-icon.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/loading-spinner/loading-spinner.html">
-<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
-<link rel="import" href="../../bower_components/styled-dialog/styled-dialog.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../build-and-run-query/build-and-run-query.html">
+<link rel="import" href="../button-action/button-action.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../json-combine/json-combine.html">
+<link rel="import" href="../loading-spinner/loading-spinner.html">
+<link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../styled-dialog/styled-dialog.html">
+<link rel="import" href="../styled-dialog/styled-dialog-styles.html">
 <link rel="import" href="pdfmake.html">
 
 <!--
 A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
+
 ### Example
 ```html
 <export-button
@@ -48,19 +52,23 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
   transform-search-results-function="[[createSearchResultData]]">
 </export-button>
 ```
+
 @demo demo/index.html
 -->
 
 <dom-module id="export-button">
   <template>
     <style include="iron-flex"></style>
+    <style include="styled-dialog-styles"></style>
     <style>
       :host {
         display: block;
       }
 
-      loading-spinner ::content > div {
-        margin: 5px;
+      loading-spinner {
+        --loading-spinner-mixin: {
+          margin: 5px;
+        };
       }
 
       .link {
@@ -92,6 +100,11 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       paper-listbox paper-item {
         cursor: pointer;
       }
+
+      button-action {
+        margin-left: 2px;
+        margin-right: 8px;
+      }
     </style>
 
     <template is="dom-if" if="[[data.length]]">
@@ -115,13 +128,13 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       </div>
 
       <div class="layout horizontal">
-        <button-action class="styled-dialog-tall styled-dialog-right-space"
+        <button-action class="styled-dialog-tall"
           disabled="[[_standardExportLoading]]"
           text="Export to CSV"
           click-listener="[[_createExportDataForCsvListener()]]">
         </button-action>
 
-        <button-action class="styled-dialog-tall styled-dialog-right-space"
+        <button-action class="styled-dialog-tall"
           disabled="[[_standardExportLoading]]"
           text="Export to PDF"
           click-listener="[[_createExportDataForPdfListener()]]">
@@ -150,7 +163,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         <div class="layout horizontal">
           <div class="styled-dialog-name styled-dialog-tall styled-dialog-right-space">Number of Top Ads to Export</div>
           <paper-dropdown-menu label="Choose Number to Export" no-label-float>
-            <paper-listbox class="dropdown-content" attr-for-selected="value" selected="{{_bulkSize}}">
+            <paper-listbox slot="dropdown-content" attr-for-selected="value" selected="{{_bulkSize}}">
               <paper-item value="1000">1,000</paper-item>
               <paper-item value="5000">5,000</paper-item>
               <paper-item value="10000">10,000</paper-item>
@@ -159,7 +172,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         </div>
 
         <div class="layout horizontal">
-          <button-action class="styled-dialog-tall styled-dialog-right-space"
+          <button-action class="styled-dialog-tall"
             disabled="[[_bulkExportLoading]]"
             text="Export to CSV"
             click-listener="[[_createBulkExportListener()]]">
@@ -346,9 +359,13 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
          * The list of search fields to use as the secondary argument in the `transformSearchInputFunction`.
          *
          * @type {Array}
+         * @default null
          */
         searchFields: {
-          type: Array
+          type: Array,
+          value: function() {
+            return null;
+          }
         },
 
         /**
@@ -612,9 +629,9 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
 
       observers: [
         // Use observers rather than a json-combine element because we must observe changes on data.* rather than data itself.
-        '_computeDataForCsv(data.length, transformCsvFunction)',
-        '_computeDataForPdf(data.*, transformPdfFunction)',
         '_computeDataForCsv(data.length, transformCsvFunction, searchFields)',
+        '_computeDataForCsv(data.*, transformCsvFunction, searchFields)',
+        '_computeDataForPdf(data.length, transformPdfFunction)',
         '_computeDataForPdf(data.*, transformPdfFunction)',
         '_handleBulkError(_bulkError)',
         '_updateBulkDataObject(searchParameters.*, searchFields, transformSearchInputFunction)',
@@ -626,7 +643,9 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _computeDataForCsv: function() {
-        this._dataForCsv = this.transformCsvFunction(this.data, this.searchFields);
+        if(this.transformCsvFunction && this.data) {
+          this._dataForCsv = this.transformCsvFunction(this.data, this.searchFields);
+        }
       },
 
       /**
@@ -635,7 +654,9 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _computeDataForPdf: function() {
-        this._dataForPdf = this.transformPdfFunction(this.data);
+        if(this.transformPdfFunction && this.data) {
+          this._dataForPdf = this.transformPdfFunction(this.data);
+        }
       },
 
       /**
@@ -776,7 +797,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _getBulkDataProperty: function(array, index, field) {
-        if(index < 0 || index >= array.length) {
+        if(!array || index < 0 || index >= array.length) {
           return undefined;
         }
         return array[index][field];
@@ -859,7 +880,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _getImageSrc: function(url, source) {
-        return '/' + url + '/' + source;
+        return (url && source) ? ('/' + url + '/' + source) : undefined;
       },
 
       /**
@@ -913,10 +934,12 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * @private
        */
       _updateBulkDataObject: function() {
-        this.set('_bulkData', {
-          array: this.transformSearchInputFunction(this.searchParameters, this.searchFields),
-          index: 0
-        });
+        if(this.transformSearchInputFunction && this.searchParameters && this.searchFields) {
+          this.set('_bulkData', {
+            array: this.transformSearchInputFunction(this.searchParameters, this.searchFields),
+            index: 0
+          });
+        }
       },
 
       /**
