@@ -128,15 +128,23 @@ limitations under the License.
       expect(element.$$('styled-dialog')).to.exist;
       expect(element.$$('styled-dialog').getAttribute('fill')).to.exist;
       expect(element.$$('styled-dialog').getAttribute('header')).to.equal('Export');
-      expect(element.$$('styled-dialog').id).to.equal('dialog');
+      expect(element.$$('styled-dialog').id).to.equal('exportDialog');
     });
 
-    test('does show an image element', function() {
-      expect(element.$$('img')).to.exist;
-      expect(element.$$('img').getAttribute('id')).to.equal('imageId');
-      expect(element.$$('img').getAttribute('crossorigin')).to.equal('anonymous');
-      expect(element.$$('img').getAttribute('src')).to.equal('imageSource');
-      expect(element.$$('img').getAttribute('style')).to.equal('display:none');
+    test('does not show an image element if _opened is false', function() {
+      expect(element.$$('img')).to.not.exist;
+    });
+
+    test('does show an image element if _opened is true', function(done) {
+      element._opened = true;
+      flush(function() {
+        expect(element.$$('img')).to.exist;
+        expect(element.$$('img').getAttribute('id')).to.equal('imageId');
+        expect(element.$$('img').getAttribute('crossorigin')).to.equal('anonymous');
+        expect(element.$$('img').getAttribute('src')).to.equal('imageSource');
+        expect(element.$$('img').getAttribute('style')).to.equal('display:none');
+        done();
+      });
     });
 
     test('does show two button-action elements', function() {
@@ -280,82 +288,87 @@ limitations under the License.
       expect(called).to.be.true;
     });
 
-    test('_createPdfDoc does return a doc object', function() {
-      expect(element._createPdfDoc).to.be.a('Function');
-      var doc = element._createPdfDoc([{
-        images: [{
-          id: 'imageId',
-          source: 'imageSource',
+    test('_createPdfDoc does return a doc object', function(done) {
+      element._opened = true;
+
+      flush(function() {
+        expect(element._createPdfDoc).to.be.a('Function');
+        var doc = element._createPdfDoc([{
+          images: [{
+            id: 'imageId',
+            source: 'imageSource',
+            text: 'imageText'
+          }],
+          paragraphs: [{
+            label: 'label-a',
+            value: 'value-a'
+          }, {
+            label: 'label-b',
+            value: 'value-b'
+          }, {
+            label: 'label-c',
+            value: 'value-c'
+          }, {
+            label: 'label-d',
+            value: 'value-d'
+          }]
+        }]);
+        expect(doc).to.be.an('Object');
+        expect(doc.content).to.be.an('Array');
+        expect(doc.content).to.deep.equal([{
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
+          text: [{
+            bold: true,
+            text: 'label-a'
+          }, {
+            text: 'value-a'
+          }]
+        }, {
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
+          text: [{
+            bold: true,
+            text: 'label-b'
+          }, {
+            text: 'value-b'
+          }]
+        }, {
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
+          text: [{
+            bold: true,
+            text: 'label-c'
+          }, {
+            text: 'value-c'
+          }]
+        }, {
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
+          text: [{
+            bold: true,
+            text: 'label-d'
+          }, {
+            text: 'value-d'
+          }]
+        }, {
+          bold: true,
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
+          text: 'Image(s):'
+        }, {
+          fontSize: 12,
+          margin: [0, 0, 0, 10],
           text: 'imageText'
-        }],
-        paragraphs: [{
-          label: 'label-a',
-          value: 'value-a'
+          /* TODO Use a permament link as the image source so we can test it.
         }, {
-          label: 'label-b',
-          value: 'value-b'
-        }, {
-          label: 'label-c',
-          value: 'value-c'
-        }, {
-          label: 'label-d',
-          value: 'value-d'
-        }]
-      }]);
-      expect(doc).to.be.an('Object');
-      expect(doc.content).to.be.an('Array');
-      expect(doc.content).to.deep.equal([{
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: [{
-          bold: true,
-          text: 'label-a'
-        }, {
-          text: 'value-a'
-        }]
-      }, {
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: [{
-          bold: true,
-          text: 'label-b'
-        }, {
-          text: 'value-b'
-        }]
-      }, {
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: [{
-          bold: true,
-          text: 'label-c'
-        }, {
-          text: 'value-c'
-        }]
-      }, {
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: [{
-          bold: true,
-          text: 'label-d'
-        }, {
-          text: 'value-d'
-        }]
-      }, {
-        bold: true,
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: 'Image(s):'
-      }, {
-        fontSize: 12,
-        margin: [0, 0, 0, 10],
-        text: 'imageText'
-        /* TODO Use a permament link as the image source so we can test it.
-      }, {
-        fit: [500, 250],
-        image: 'data:,',
-        margin: [0, 0, 0, 10]
-        */
-      }]);
+          fit: [500, 250],
+          image: 'data:,',
+          margin: [0, 0, 0, 10]
+          */
+        }]);
+        done();
+      });
     });
 
     test('_getBulkDataProperty does return the correct value', function() {
@@ -434,6 +447,29 @@ limitations under the License.
       })).to.be.true;
       expect(element._isNotUndefined(null)).to.be.true;
       expect(element._isNotUndefined(undefined)).to.be.false;
+    });
+
+    test('open does open the dialog', function(done) {
+      element.open();
+
+      flush(function() {
+        var dialog = element.$$('#exportDialog');
+        expect(dialog).to.exist;
+        expect(dialog.opened).to.be.true;
+        expect(element._opened).to.be.true;
+        done();
+      });
+    });
+
+    test('setting _opened to true does open the dialog', function(done) {
+      element._opened = true;
+
+      flush(function() {
+        var dialog = element.$$('#exportDialog');
+        expect(dialog).to.exist;
+        expect(dialog.opened).to.be.true;
+        done();
+      });
     });
   });
 

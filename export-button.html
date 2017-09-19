@@ -114,7 +114,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       </div>
     </template>
 
-    <styled-dialog id="dialog" header="Export" fill>
+    <styled-dialog id="exportDialog" header="Export" fill opened="{{_opened}}">
       <div class="layout horizontal">
         <div class="styled-dialog-bold styled-dialog-right-space">Standard Export</div>
         <div class="styled-dialog-bold styled-dialog-right-space">(Export the [[data.length]] Ads Currently Shown)</div>
@@ -272,13 +272,13 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       loading="{{_bulkExportLoading}}">
     </iron-ajax>
 
-    <div>
+    <template is="dom-if" if="[[_opened]]">
       <template is="dom-repeat" items="[[_dataForPdf]]">
         <template is="dom-repeat" items="[[item.images]]" as="image">
           <img id$="[[image.id]]" crossorigin="anonymous" src="[[image.source]]" style="display:none"/>
         </template>
       </template>
-    </div>
+    </template>
   </template>
 
   <script>
@@ -562,6 +562,18 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
          */
         _dataForPdf: {
           type: Array
+        },
+
+        /**
+         * Whether the export dialog is opened.
+         *
+         * @type {Boolean}
+         * @default false
+         * @private
+         */
+        _opened: {
+          type: Boolean,
+          value: false
         },
 
         /**
@@ -925,7 +937,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * Opens the export dialog.
        */
       open: function() {
-        this.$$('#dialog').open();
+        this.set('_opened', true);
       }
     });
   })();
