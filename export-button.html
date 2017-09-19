@@ -275,7 +275,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
     <div>
       <template is="dom-repeat" items="[[_dataForPdf]]">
         <template is="dom-repeat" items="[[item.images]]" as="image">
-          <img id$="[[image.id]]" crossorigin="anonymous" src="[[_getImageSrc(downloadImageUrl, image.source)]]" style="display:none"/>
+          <img id$="[[image.id]]" crossorigin="anonymous" src="[[image.source]]" style="display:none"/>
         </template>
       </template>
     </div>
@@ -306,15 +306,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
          */
         data: {
           type: Array
-        },
-
-        /**
-         * The URL needed by the PDF export to download each image.
-         *
-         * @type {String}
-         */
-        downloadImageUrl: {
-          type: String
         },
 
         /**
@@ -869,18 +860,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         if(this._standardExportResponse) {
           window.open(this._standardExportResponse, 'export');
         }
-      },
-
-      /**
-       * Returns the image source needed by the PDF export to download each image.
-       *
-       * @param {String} url
-       * @param {String} source
-       * @return {String}
-       * @private
-       */
-      _getImageSrc: function(url, source) {
-        return (url && source) ? ('/' + url + '/' + source) : undefined;
       },
 
       /**

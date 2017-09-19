@@ -41,7 +41,6 @@ limitations under the License.
     setup(function(done) {
       element = fixture('export-button-fixture');
       element.data = ['a', 'b', 'c', 'd'];
-      element.downloadImageUrl = 'downloadImage';
       element.transformCsvFunction = function(data) {
         return data.map(function(item) {
           return item.toUpperCase();
@@ -95,7 +94,6 @@ limitations under the License.
 
     test('input and computed properties are set correctly', function() {
       expect(element.data).to.deep.equal(['a', 'b', 'c', 'd']);
-      expect(element.downloadImageUrl).to.equal('downloadImage');
       expect(element.transformCsvFunction).to.be.a('Function');
       expect(element.transformPdfFunction).to.be.a('Function');
       expect(element._dataForCsv).to.deep.equal(['A', 'B', 'C', 'D']);
@@ -137,7 +135,7 @@ limitations under the License.
       expect(element.$$('img')).to.exist;
       expect(element.$$('img').getAttribute('id')).to.equal('imageId');
       expect(element.$$('img').getAttribute('crossorigin')).to.equal('anonymous');
-      expect(element.$$('img').getAttribute('src')).to.equal('/downloadImage/imageSource');
+      expect(element.$$('img').getAttribute('src')).to.equal('imageSource');
       expect(element.$$('img').getAttribute('style')).to.equal('display:none');
     });
 
@@ -388,12 +386,6 @@ limitations under the License.
         field: 'one',
         value: 'two'
       }], 0, 'value')).to.equal('two');
-    });
-
-    test('_getImageSrc does return the correct value', function() {
-      expect(element._getImageSrc).to.be.a('Function');
-      expect(element._getImageSrc('a', 'b')).to.equal('/a/b');
-      expect(element._getImageSrc('c', 'd')).to.equal('/c/d');
     });
 
     test('_isBulkDataDoneLoading does return the correct value', function() {
