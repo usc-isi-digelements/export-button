@@ -71,24 +71,32 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         };
       }
 
-      .link {
-        color: var(--secondary-text-color);
-        cursor: pointer;
-        font-weight: 500;
-        text-decoration: underline;
+      iron-icon {
+        --iron-icon-height: 20px;
+        --iron-icon-width: 20px;
+        min-width: 20px;
       }
 
-      .link:hover {
+      .button {
+        color: var(--disabled-text-color);
+        font-weight: 500;
+        line-height: 20px;
+      }
+
+      .button.enable {
+        color: var(--secondary-text-color);
+        cursor: pointer;
+      }
+
+      .button.enable:hover {
         color: var(--primary-text-color);
       }
 
-      .link > iron-icon {
-        margin-top: 2px;
-      }
-
-      .link > .open {
-        line-height: 30px;
-        margin-left: 5px;
+      paper-dropdown-menu,
+      paper-input {
+        --paper-input-container: {
+          padding: 4px 0 0;
+        };
       }
 
       paper-listbox {
@@ -98,32 +106,40 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       }
 
       paper-listbox paper-item {
-        cursor: pointer;
+        --paper-item-min-height: 30px;
+        --paper-item: {
+          cursor: pointer;
+          padding: 0 10px;
+          white-space: nowrap;
+        }
       }
 
       button-action {
-        margin-left: 2px;
-        margin-right: 8px;
+        margin-right: 10px;
+      }
+
+      .styled-dialog-strong {
+        font-size: 18px;
+      }
+
+      .styled-dialog-tall {
+        line-height: 30px;
+        min-height: 30px;
       }
     </style>
 
-    <template is="dom-if" if="[[data.length]]">
-      <div class="layout horizontal center link" on-tap="open">
-        <iron-icon icon="file-download"></iron-icon>
-        <span class="open">Export</span>
-      </div>
-    </template>
+    <iron-icon class$="button [[_getButtonStyleClass(data)]]" icon="file-download" title="Export Results..." on-tap="open"></iron-icon>
 
     <styled-dialog id="exportDialog" header="Export" fill opened="{{_opened}}">
       <div class="layout horizontal">
-        <div class="styled-dialog-bold styled-dialog-right-space">Standard Export</div>
-        <div class="styled-dialog-bold styled-dialog-right-space">(Export the [[data.length]] Ads Currently Shown)</div>
+        <div class="styled-dialog-strong styled-dialog-tall styled-dialog-right-space">Standard Export</div>
+        <div class="styled-dialog-strong styled-dialog-tall styled-dialog-right-space">(Export the [[data.length]] Results Currently Shown)</div>
       </div>
 
-      <div class="styled-dialog-text">Please note that it may take a minute or longer to export hundreds of results to PDF.</div>
+      <div class="styled-dialog-text styled-dialog-tall">Please note that it may take a minute or longer to export hundreds of results to PDF.</div>
 
       <div class="layout horizontal">
-        <div class="styled-dialog-name styled-dialog-tall styled-dialog-right-space">Name of Export File</div>
+        <div class="styled-dialog-text styled-dialog-tall styled-dialog-right-space">Name of Export File</div>
         <paper-input class="styled-dialog-right-space" label="Enter Export Filename" value="{{filename}}" no-label-float></paper-input>
       </div>
 
@@ -145,7 +161,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         </template>
 
         <template is="dom-if" if="[[_standardExportError]]">
-          <div class="styled-dialog-text">Error Exporting CSV File</div>
+          <div class="styled-dialog-text styled-dialog-tall">Error Exporting CSV File</div>
         </template>
       </div>
 
@@ -153,15 +169,15 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
 
       <template is="dom-if" if="[[_isNotUndefined(searchParameters)]]">
         <div class="layout horizontal">
-          <div class="styled-dialog-bold styled-dialog-right-space">Bulk Export</div>
-          <div class="styled-dialog-bold styled-dialog-right-space">(Export the Top Ads Matching Each Search Term)</div>
+          <div class="styled-dialog-strong styled-dialog-tall styled-dialog-right-space">Bulk Export</div>
+          <div class="styled-dialog-strong styled-dialog-tall styled-dialog-right-space">(Export the Top Results Matching Each Search Term)</div>
         </div>
 
-        <div class="styled-dialog-text">If your exported file doesn't download automatically, please check that your internet browser allows popups from this page.</div>
-        <div class="styled-dialog-text">Please note that it may take a minute or longer to load the tens of thousands of results returned from multiple search terms.</div>
+        <div class="styled-dialog-text styled-dialog-tall">If your exported file doesn't download automatically, please check that your internet browser allows popups from this page.</div>
+        <div class="styled-dialog-text styled-dialog-tall">Please note that it may take a minute or longer to load the tens of thousands of results returned from multiple search terms.</div>
 
         <div class="layout horizontal">
-          <div class="styled-dialog-name styled-dialog-tall styled-dialog-right-space">Number of Top Ads to Export</div>
+          <div class="styled-dialog-text styled-dialog-tall styled-dialog-right-space">Number of Top Results to Export</div>
           <paper-dropdown-menu label="Choose Number to Export" no-label-float>
             <paper-listbox slot="dropdown-content" attr-for-selected="value" selected="{{_bulkSize}}">
               <paper-item value="1000">1,000</paper-item>
@@ -179,7 +195,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
           </button-action>
 
           <template is="dom-if" if="[[_bulkSearchLoading]]">
-            <loading-spinner show="[[_bulkSearchLoading]]" type="Ad Data [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
+            <loading-spinner show="[[_bulkSearchLoading]]" type="Result Data [[_getBulkDataProperty(_bulkData.array, _bulkData.index, 'value')]]"></loading-spinner>
           </template>
 
           <template is="dom-if" if="[[_bulkExportLoading]]">
@@ -190,14 +206,14 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         <template is="dom-if" if="[[_isBulkDataLoadingOrDone(_bulkSearchReady, _bulkData.array, _bulkData.index)]]">
           <template is="dom-repeat" items="[[_bulkData.array]]">
             <template is="dom-if" if="[[_isNotUndefined(item.count)]]">
-              <div class="styled-dialog-text">Exported Top <strong>[[item.count]]</strong> Ads Matching Term: <strong>[[item.value]]</strong></div>
+              <div class="styled-dialog-text">Exported Top <strong>[[item.count]]</strong> Results Matching Term: <strong>[[item.value]]</strong></div>
             </template>
             <template is="dom-if" if="[[!_isNotUndefined(item.count)]]">
               <template is="dom-if" if="[[!_isNotUndefined(item.error)]]">
-                <div class="styled-dialog-text">Loading Top <strong>[[_bulkSize]]</strong> Ads Matching Term: <strong>[[item.value]]</strong>...</div>
+                <div class="styled-dialog-text">Loading Top <strong>[[_bulkSize]]</strong> Results Matching Term: <strong>[[item.value]]</strong>...</div>
               </template>
               <template is="dom-if" if="[[_isNotUndefined(item.error)]]">
-                <div class="styled-dialog-text">Failed to Load Top Ads Matching Term: <strong>[[item.value]]</strong></div>
+                <div class="styled-dialog-text">Failed to Load Top Results Matching Term: <strong>[[item.value]]</strong></div>
               </template>
             </template>
           </template>
@@ -807,6 +823,17 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       },
 
       /**
+       * Returns the style class for the button to open the dialog.
+       *
+       * @param {Array} data
+       * @return {Boolean}
+       * @private
+       */
+      _getButtonStyleClass: function(data) {
+        return data && data.length ? 'enable' : '';
+      },
+
+      /**
        * Shows an error.  Then runs the next bulk data search.
        *
        * @private
@@ -937,7 +964,9 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        * Opens the export dialog.
        */
       open: function() {
-        this.set('_opened', true);
+        if(this.data && this.data.length) {
+          this.set('_opened', true);
+        }
       }
     });
   })();

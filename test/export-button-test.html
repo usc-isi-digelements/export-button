@@ -119,9 +119,8 @@ limitations under the License.
       }]);
     });
 
-    test('does show a link element', function() {
-      expect(element.$$('.link')).to.exist;
-      expect(element.$$('.link .open')).to.exist;
+    test('does show an iron-icon element', function() {
+      expect(element.$$('iron-icon.button.enable')).to.exist;
     });
 
     test('does show a styled-dialog element', function() {
