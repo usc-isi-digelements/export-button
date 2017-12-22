@@ -67,6 +67,7 @@ limitations under the License.
 
     test('default properties are set correctly', function() {
       expect(element.client).to.not.exist;
+      expect(element.exportEndpoint).to.equal('/export');
       expect(element.filename).to.equal('data');
       expect(element.filterList).to.not.exist;
       expect(element.indexName).to.not.exist;
@@ -173,7 +174,7 @@ limitations under the License.
       expect(ajaxElements[0].getAttribute('content-type')).to.equal('application/json');
       expect(ajaxElements[0].getAttribute('handle-as')).to.equal('text');
       expect(ajaxElements[0].getAttribute('method')).to.equal('POST');
-      expect(ajaxElements[0].getAttribute('url')).to.equal('/export');
+      expect(ajaxElements[0].url).to.equal('/export');
       expect(ajaxElements[1]).to.exist;
       expect(ajaxElements[1].id).to.equal('bulkExport');
       expect(ajaxElements[1].body).to.not.exist;
@@ -181,7 +182,7 @@ limitations under the License.
       expect(ajaxElements[1].getAttribute('content-type')).to.equal('application/json');
       expect(ajaxElements[1].getAttribute('handle-as')).to.equal('text');
       expect(ajaxElements[1].getAttribute('method')).to.equal('POST');
-      expect(ajaxElements[1].getAttribute('url')).to.equal('/export');
+      expect(ajaxElements[1].url).to.equal('/export');
       expect(ajaxElements[2]).to.not.exist;
     });
 

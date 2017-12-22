@@ -233,7 +233,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       content-type="application/json"
       handle-as="text"
       method="POST"
-      url="/export"
+      url="[[exportEndpoint]]"
       on-response="_handleStandardExportResponse"
       last-error="{{_standardExportError}}"
       last-response="{{_standardExportResponse}}"
@@ -281,7 +281,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       content-type="application/json"
       handle-as="text"
       method="POST"
-      url="/export"
+      url="[[exportEndpoint]]"
       on-response="_handleBulkExportResponse"
       last-error="{{_bulkError}}"
       last-response="{{_bulkExportResponse}}"
@@ -322,6 +322,17 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
          */
         data: {
           type: Array
+        },
+
+        /**
+         * The endpoint for the export.
+         *
+         * @type {String}
+         * @default '/export'
+         */
+        exportEndpoint: {
+          type: String,
+          value: '/export'
         },
 
         /**
