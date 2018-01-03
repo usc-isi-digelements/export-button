@@ -685,7 +685,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
        */
       _computeDataForPdf: function() {
         if(this.transformPdfFunction && this.data) {
-          this._dataForPdf = this.transformPdfFunction(this.data);
+          this._dataForPdf = this.transformPdfFunction(this.data, this.searchFields);
         }
       },
 
