@@ -69,7 +69,6 @@ limitations under the License.
       expect(element.client).to.not.exist;
       expect(element.exportEndpoint).to.equal('/export');
       expect(element.filename).to.equal('data');
-      expect(element.filterList).to.not.exist;
       expect(element.indexName).to.not.exist;
       expect(element.indexTypes).to.not.exist;
       expect(element.searchFields).to.be.null;
@@ -586,12 +585,10 @@ limitations under the License.
     test('properties do update build-and-run-query', function() {
       element.indexName = 'testName';
       element.indexTypes = ['testType'];
-      element.filterList = ['testFilter'];
       element.sourceExclude = ['testExclude'];
       element.sourceInclude = ['testInclude'];
       element.transformSearchResultsFunction = function() {};
       element._bulkSize = '10000';
-      expect(element.$$('build-and-run-query').filters).to.deep.equal(['testFilter']);
       expect(element.$$('build-and-run-query').indexName).to.equal('testName');
       expect(element.$$('build-and-run-query').indexTypes).to.deep.equal(['testType']);
       expect(element.$$('build-and-run-query').pageSize).to.equal('10000');

@@ -40,7 +40,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
   client="[[esClient]]"
   data="[[exportData]]"
   download-image-url="[[downloadImageUrl]]"
-  filter-list="[[filterList]]"
   index-name="[[elasticIndex]]"
   index-types="[[elasticTypes]]"
   search-fields="[[queryBuilderConfig]]"
@@ -248,7 +247,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
       index-name="[[indexName]]"
       index-types="[[indexTypes]]"
       aggregations="[]"
-      filters="[[filterList]]"
       page="0"
       page-size="[[_bulkSize]]"
       properties-ready="[[_bulkSearchReady]]"
@@ -344,15 +342,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
         filename: {
           type: String,
           value: 'data'
-        },
-
-        /**
-         * The list of elasticsearch filter objects to use in the bulk data query.
-         *
-         * @type {Array}
-         */
-        filterList: {
-          type: Array
         },
 
         /**
