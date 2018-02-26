@@ -17,6 +17,7 @@ limitations under the License.
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../build-and-run-query/build-and-run-query.html">
 <link rel="import" href="../button-action/button-action.html">
+<link rel="import" href="../dropdown-menu/dropdown-menu.html">
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-icon/iron-icon.html">
@@ -24,9 +25,6 @@ limitations under the License.
 <link rel="import" href="../json-combine/json-combine.html">
 <link rel="import" href="../loading-spinner/loading-spinner.html">
 <link rel="import" href="../neon-animation/web-animations.html">
-<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="../paper-item/paper-item.html">
-<link rel="import" href="../paper-listbox/paper-listbox.html">
 <link rel="import" href="../styled-dialog/styled-dialog.html">
 <link rel="import" href="../styled-dialog/styled-dialog-styles.html">
 <link rel="import" href="pdfmake.html">
@@ -89,28 +87,6 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
 
       .button.enable:hover {
         color: var(--primary-text-color);
-      }
-
-      paper-dropdown-menu,
-      paper-input {
-        --paper-input-container: {
-          padding: 4px 0 0;
-        };
-      }
-
-      paper-listbox {
-        --paper-listbox: {
-          padding: 0;
-        }
-      }
-
-      paper-listbox paper-item {
-        --paper-item-min-height: 30px;
-        --paper-item: {
-          cursor: pointer;
-          padding: 0 10px;
-          white-space: nowrap;
-        }
       }
 
       button-action {
@@ -177,13 +153,12 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
 
         <div class="layout horizontal">
           <div class="styled-dialog-text styled-dialog-tall styled-dialog-right-space">Number of Top Results to Export</div>
-          <paper-dropdown-menu label="Choose Number to Export" no-label-float>
-            <paper-listbox slot="dropdown-content" attr-for-selected="value" selected="{{_bulkSize}}">
-              <paper-item value="1000">1,000</paper-item>
-              <paper-item value="5000">5,000</paper-item>
-              <paper-item value="10000">10,000</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
+          <dropdown-menu
+            data='[{"title":"1,000","value":"1000"},{"title":"5,000","value":"5000"},{"title":"10,000","value":"10000"}]'
+            label="Choose Number to Export"
+            no-label-float
+            selected="{{_bulkSize}}">
+          </dropdown-menu>
         </div>
 
         <div class="layout horizontal">
