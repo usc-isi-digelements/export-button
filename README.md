@@ -1,10 +1,13 @@
 # export-button
 
-A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
+A Polymer Element showing a styled dialog that creates pdf or csv files from elasticsearch query results.
 
 ### Example
 ```html
-<export-button
+<export-button enable open-callback="[[buttonCallbacks.openExportDialog]]"></export-button>
+
+<export-dialog
+    button-callbacks="{{buttonCallbacks}}"
     client="[[esClient]]"
     data="[[exportData]]"
     download-image-url="[[downloadImageUrl]]"
@@ -17,7 +20,7 @@ A Polymer Element that generates pdf or csv files from queries to ElasticSearch.
     transform-pdf-function="[[createExportDataForPdf]]"
     transform-search-input-function="[[createBulkSearchData]]"
     transform-search-results-function="[[createSearchResultData]]">
-</export-button>
+</export-dialog>
 ```
 
 ### Dependencies
