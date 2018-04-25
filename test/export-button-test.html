@@ -48,20 +48,15 @@ limitations under the License.
       expect(element.openCallback).to.not.exist;
     });
 
-    test('does show a disabled paper-icon-button element', function() {
-      expect(element.$$('paper-icon-button')).to.exist;
-      expect(element.$$('paper-icon-button').classList.contains('enable')).to.be.false;
+    test('does show a disabled icon-button element', function() {
+      expect(element.$$('icon-button')).to.exist;
+      expect(element.$$('icon-button').disabled).to.be.true;
     });
 
-    test('does show an enabled paper-icon-button element if enable is true', function() {
+    test('does show a non-disabled icon-button element if enable is true', function() {
       element.enable = true;
-      expect(element.$$('paper-icon-button')).to.exist;
-      expect(element.$$('paper-icon-button').classList.contains('enable')).to.be.true;
-    });
-
-    test('_getButtonStyleClass does return expected string', function() {
-      expect(element._getButtonStyleClass(false)).to.equal('');
-      expect(element._getButtonStyleClass(true)).to.equal('enable');
+      expect(element.$$('icon-button')).to.exist;
+      expect(element.$$('icon-button').disabled).to.be.false;
     });
 
     test('_openExportDialog does not call openCallback if enable is false', function() {

@@ -15,7 +15,7 @@ limitations under the License.
 -->
 
 <link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../icon-button/icon-button.html">
 
 <!--
 A Polymer Element showing the button for the export-dialog.
@@ -34,29 +34,9 @@ A Polymer Element showing the button for the export-dialog.
       :host {
         display: block;
       }
-
-      paper-icon-button {
-        border-radius: 50%;
-        color: var(--paper-grey-300);
-        font-weight: 500;
-        height: 20px;
-        line-height: 20px;
-        min-width: 20px;
-        padding: 0;
-        width: 20px;
-      }
-
-      .enable {
-        color: var(--paper-grey-600);
-        cursor: pointer;
-      }
-
-      .enable:hover {
-        color: var(--paper-grey-900);
-      }
     </style>
 
-    <paper-icon-button class$="[[_getButtonStyleClass(enable)]]" icon="file-download" title="Export Results..." on-tap="_openExportDialog"></iron-icon>
+    <icon-button disabled="[[!enable]]" icon="file-download" title-tooltip="Export Results..." on-tap="_openExportDialog"></icon-button>
   </template>
 
   <script>
@@ -90,17 +70,6 @@ A Polymer Element showing the button for the export-dialog.
         openCallback: {
           type: Object
         }
-      },
-
-      /**
-       * Returns the style class for the button to open the dialog.
-       *
-       * @param {Boolean} enable
-       * @return {Boolean}
-       * @private
-       */
-      _getButtonStyleClass: function(enable) {
-        return enable ? 'enable' : '';
       },
 
       /**
